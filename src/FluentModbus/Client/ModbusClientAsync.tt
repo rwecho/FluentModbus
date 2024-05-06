@@ -13,6 +13,8 @@
 #pragma warning disable CS1998
 
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
+
 
 namespace FluentModbus
 {

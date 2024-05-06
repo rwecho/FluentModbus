@@ -1,11 +1,12 @@
 ﻿
  /* This is automatically translated code. */
+using Microsoft.Extensions.Logging;
 
 namespace FluentModbus
 {
-	public partial class ModbusRtuClient
-	{
-		///<inheritdoc/>
+    public partial class ModbusRtuClient
+    {
+        ///<inheritdoc/>
         protected override async Task<Memory<byte>> TransceiveFrameAsync(byte unitIdentifier, ModbusFunctionCode functionCode, Action<ExtendedBinaryWriter> extendFrame, CancellationToken cancellationToken = default)
         {
             // WARNING: IF YOU EDIT THIS METHOD, REFLECT ALL CHANGES ALSO IN TransceiveFrameAsync!
@@ -45,6 +46,9 @@ namespace FluentModbus
             _frameBuffer.Writer.Write(crc);
             frameLength = (int)_frameBuffer.Writer.BaseStream.Position;
 
+            Logger.LogDebug("Send request: {datagram}",
+                string.Join(" ", _frameBuffer.Buffer.AsMemory(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
+            
             // send request
             await _serialPort!.Value.Value.WriteAsync(_frameBuffer.Buffer, 0, frameLength, cancellationToken).ConfigureAwait(false);
 
@@ -60,6 +64,9 @@ namespace FluentModbus
             {
                 frameLength += await _serialPort!.Value.Value.ReadAsync(_frameBuffer.Buffer, frameLength, _frameBuffer.Buffer.Length - frameLength, cancellationToken).ConfigureAwait(false);
 
+                Logger.LogDebug("Received response: {datagram}",
+                    string.Join(" ", _frameBuffer.Buffer.AsMemory(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
+                
                 if (ModbusUtils.DetectResponseFrame(unitIdentifier, _frameBuffer.Buffer.AsMemory()[..frameLength]))
                 {
                     break;
@@ -84,6 +91,6 @@ namespace FluentModbus
                 throw new ModbusException(ErrorMessage.ModbusClient_InvalidResponseFunctionCode);
 
             return _frameBuffer.Buffer.AsMemory(1, frameLength - 3);
-        }	
-	}
+        }    
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 
 namespace FluentModbus
 {
@@ -25,7 +26,7 @@ namespace FluentModbus
         /// <summary>
         /// Creates a new Modbus TCP client for communication with Modbus TCP servers or bridges, routers and gateways for communication with serial line end units.
         /// </summary>
-        public ModbusTcpClient()
+        public ModbusTcpClient(ILogger? logger = null):base(logger)
         {
             _transactionIdentifierBase = 0;
             _transactionIdentifierLock = new object();

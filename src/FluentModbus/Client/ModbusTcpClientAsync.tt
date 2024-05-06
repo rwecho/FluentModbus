@@ -9,7 +9,8 @@
 
 #>
  /* This is automatically translated code. */
- 
+ using Microsoft.Extensions.Logging;
+
 namespace FluentModbus
 {
     public partial class ModbusTcpClient

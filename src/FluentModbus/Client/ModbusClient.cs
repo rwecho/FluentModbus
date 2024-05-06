@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FluentModbus
 {
@@ -16,8 +18,15 @@ namespace FluentModbus
         public abstract bool IsConnected { get; }
         
         protected private bool SwapBytes { get; set; }
+        
+        protected ILogger Logger { get; }
 
         #endregion
+        
+        protected ModbusClient(ILogger? logger)
+        {
+            Logger = logger ?? NullLogger.Instance;
+        }
 
         #region Methods
 
@@ -163,7 +172,8 @@ namespace FluentModbus
             if (buffer.Length < quantity * 2 + 2)
                 throw new ModbusException(ErrorMessage.ModbusClient_InvalidResponseMessageLength);
 
-            return buffer.Slice(2);
+            // the EA28 response with 寄存器首地址 before count byte
+            return buffer.Slice(4);
         }
 
         /// <summary>

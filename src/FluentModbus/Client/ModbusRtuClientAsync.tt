@@ -9,6 +9,7 @@
 
 #>
  /* This is automatically translated code. */
+using Microsoft.Extensions.Logging;
 
 namespace FluentModbus
 {

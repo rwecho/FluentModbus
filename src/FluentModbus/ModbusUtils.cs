@@ -167,8 +167,8 @@ namespace FluentModbus
                     case 0x03:
                     case 0x04:
                     case 0x17:
-
-                        if (span.Length < span[2] + 5)
+                        // the EA28 response with 寄存器首地址 before count byte
+                        if (span.Length < 11)
                             return false;
 
                         break;

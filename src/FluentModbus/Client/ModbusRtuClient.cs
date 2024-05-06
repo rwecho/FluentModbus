@@ -1,4 +1,5 @@
 ﻿using System.IO.Ports;
+using Microsoft.Extensions.Logging;
 
 namespace FluentModbus
 {
@@ -19,9 +20,8 @@ namespace FluentModbus
         /// <summary>
         /// Creates a new Modbus RTU client for communication with Modbus RTU servers or bridges, routers and gateways for communication with TCP end units.
         /// </summary>
-        public ModbusRtuClient()
+        public ModbusRtuClient(ILogger? logger = null):base(logger)
         {
-            //
         }
 
         #endregion
@@ -95,6 +95,7 @@ namespace FluentModbus
                 WriteTimeout = WriteTimeout
             });
 
+            Logger.LogInformation("Connected to serial port {port} with {endianness}", port, endianness);
             Initialize(serialPort, isInternal: true, endianness);
         }
 
@@ -142,6 +143,8 @@ namespace FluentModbus
                 _serialPort.Value.Value.Close();
 
             _frameBuffer?.Dispose();
+            
+            Logger.LogInformation("Closed the opened COM port and freed all resources");
         }
 
         ///<inheritdoc/>
@@ -184,6 +187,9 @@ namespace FluentModbus
             _frameBuffer.Writer.Write(crc);
             frameLength = (int)_frameBuffer.Writer.BaseStream.Position;
 
+            Logger.LogDebug("Send request: {datagram}",
+                string.Join(" ", _frameBuffer.Buffer.AsSpan(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
+            
             // send request
             _serialPort!.Value.Value.Write(_frameBuffer.Buffer, 0, frameLength);
 
@@ -199,6 +205,9 @@ namespace FluentModbus
             {
                 frameLength += _serialPort!.Value.Value.Read(_frameBuffer.Buffer, frameLength, _frameBuffer.Buffer.Length - frameLength);
 
+                Logger.LogDebug("Received response: {datagram}",
+                    string.Join(" ", _frameBuffer.Buffer.AsSpan(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
+                
                 if (ModbusUtils.DetectResponseFrame(unitIdentifier, _frameBuffer.Buffer.AsMemory()[..frameLength]))
                 {
                     break;
