@@ -48,7 +48,11 @@ namespace FluentModbus
 
             Logger.LogDebug("Send request: {datagram}",
                 string.Join(" ", _frameBuffer.Buffer.AsMemory(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
-            
+
+            if (ReadDelay > 0)
+            {
+                await Task.Delay(ReadDelay, cancellationToken);
+            }
             // send request
             await _serialPort!.Value.Value.WriteAsync(_frameBuffer.Buffer, 0, frameLength, cancellationToken).ConfigureAwait(false);
 

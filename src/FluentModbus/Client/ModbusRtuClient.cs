@@ -65,6 +65,11 @@ namespace FluentModbus
         /// </summary>
         public int WriteTimeout { get; set; } = 1000;
 
+        
+        /// <summary>
+        /// Gets or sets the delay in milliseconds between the write and read operations. Default is 0 ms.
+        /// </summary>
+        public int ReadDelay { get; set; } = 0;
         #endregion
 
         #region Methods
@@ -189,6 +194,11 @@ namespace FluentModbus
 
             Logger.LogDebug("Send request: {datagram}",
                 string.Join(" ", _frameBuffer.Buffer.AsSpan(0, frameLength).ToArray().Select((o => o.ToString("X2")))));
+
+            if (ReadDelay > 0)
+            {
+                Thread.Sleep(ReadDelay);
+            }
             
             // send request
             _serialPort!.Value.Value.Write(_frameBuffer.Buffer, 0, frameLength);

@@ -167,8 +167,18 @@ namespace FluentModbus
                     case 0x03:
                     case 0x04:
                     case 0x17:
-                        if (span.Length < span[2] + 5)
-                            return false;
+                        if (span[2] == 0x10 && span[3] == 0x00)
+                        {
+                            if (span.Length < span[4] + 5 +2)
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (span.Length < span[2] + 5)
+                                return false;
+                        }
                         break;
 
                     // Write methods
