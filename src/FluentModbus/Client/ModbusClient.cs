@@ -172,8 +172,7 @@ namespace FluentModbus
             if (buffer.Length < quantity * 2 + 2)
                 throw new ModbusException(ErrorMessage.ModbusClient_InvalidResponseMessageLength);
 
-            // the EA28 response with 寄存器首地址 before count byte
-            return buffer.Slice(4);
+            return buffer.Slice(2);
         }
 
         /// <summary>
