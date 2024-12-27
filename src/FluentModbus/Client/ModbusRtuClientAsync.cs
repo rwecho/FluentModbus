@@ -1,6 +1,7 @@
 ﻿
  /* This is automatically translated code. */
 using Microsoft.Extensions.Logging;
+using SWS.FluentModbus;
 
 namespace FluentModbus
 {

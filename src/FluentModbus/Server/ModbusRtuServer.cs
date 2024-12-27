@@ -1,4 +1,5 @@
-﻿using System.IO.Ports;
+﻿using SWS.FluentModbus;
+using System.IO.Ports;
 
 namespace FluentModbus
 {

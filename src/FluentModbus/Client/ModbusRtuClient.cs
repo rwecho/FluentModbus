@@ -1,5 +1,6 @@
 ﻿using System.IO.Ports;
 using Microsoft.Extensions.Logging;
+using SWS.FluentModbus;
 
 namespace FluentModbus
 {

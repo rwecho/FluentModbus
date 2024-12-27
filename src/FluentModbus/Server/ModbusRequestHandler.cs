@@ -1,3 +1,4 @@
+using SWS.FluentModbus;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 

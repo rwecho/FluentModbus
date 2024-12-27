@@ -1,8 +1,9 @@
 ﻿
- /* This is automatically translated code. */
+/* This is automatically translated code. */
 
 #pragma warning disable CS1998
 
+using SWS.FluentModbus;
 using System.Collections;
 using System.Runtime.InteropServices;
 

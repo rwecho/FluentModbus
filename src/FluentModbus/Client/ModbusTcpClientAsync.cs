@@ -1,6 +1,8 @@
 ﻿
- /* This is automatically translated code. */
- 
+/* This is automatically translated code. */
+
+using SWS.FluentModbus;
+
 namespace FluentModbus
 {
 	public partial class ModbusTcpClient
